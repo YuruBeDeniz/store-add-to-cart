@@ -1,5 +1,6 @@
 import { Button, Card } from "react-bootstrap";
 import formatCurrency from "../utilities/formatCurrency";
+import { useShoppingCart } from "../context/ShoppingCartContext";
 
 type StoreItemProps = {
     id: number;
@@ -9,7 +10,13 @@ type StoreItemProps = {
 }
 
 export default function StoreItem({ id, name, price, imgUrl }: StoreItemProps) {
-  const quantity = 0;
+  const { 
+    getItemQuantity, 
+    increaseCartQuantity, 
+    decreaseCartQuantity, 
+    removeFromCart } = useShoppingCart();
+
+  const quantity = getItemQuantity(id);  
   
   return (
     <Card className="h-100">
@@ -30,7 +37,17 @@ export default function StoreItem({ id, name, price, imgUrl }: StoreItemProps) {
          >
             Add to Cart
          </Button>
-        ) : null}
+        ) : <div className="d-flex align-items-center flex-column" style={{ gap:".5rem" }}>
+              <div className="d-flex align-items-center justify-content-center" style={{ gap:".5rem" }}>
+                <Button>-</Button>
+                <div>
+                  <span className="fs-3">{quantity}</span> in cart
+                </div>
+                <Button>+</Button>
+              </div>
+              <Button variant="danger" size="sm">Remove</Button>
+           </div>
+        }
         </div>
         </Card.Body>
     </Card>
